@@ -62,7 +62,7 @@ packages=(
     libnl-3-dev libnl-genl-3-dev libssl-dev ethtool shtool
     rfkill zlib1g-dev libpcap-dev libsqlite3-dev libpcre3-dev
     libhwloc-dev libcmocka-dev hostapd wpasupplicant tcpdump
-    screen iw usbutils git
+    screen iw usbutils git gpsd--tools
 )
 
 for pkg in "${packages[@]}"; do

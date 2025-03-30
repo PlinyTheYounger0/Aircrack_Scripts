@@ -73,5 +73,5 @@ if [[ "$response" =~ ^(y|yes)$ ]]; then
     sudo airodump-ng -g -w "broad_$survey_time" -b abgx -z "$file_name" -M -U --wps --output-format pcap,csv,gps "$interface"
 
 else
-    sudo airodump-ng -g -w "broad_$survey_time" -b abgx -M -U --wps --output-format pcap,csv,gps "$interface"
+    sudo airodump-ng -g -w "broad_$survey_time" -b abg -M -U --wps --output-format pcap,csv,gps "$interface"
 fi
