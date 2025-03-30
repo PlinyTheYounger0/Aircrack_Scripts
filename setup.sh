@@ -102,7 +102,7 @@ source /etc/profile.d/custom_path.sh
 #Optionally reboot the system to update the PATH
 echo "Installation completed. A reboot is recommended to apply changes."
 read -rp "Would you like to reboot now? (y/N): " response
-response=$(echo "$response" | tr '[:upper:]' '[:lower:]')  # Normalize input
+response=$(echo "$response" | tr '[:upper:]' '[:lower:]')  #Normalize input
 if [[ "$response" =~ ^(y|yes)$ ]]; then
     reboot
 else
