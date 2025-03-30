@@ -49,6 +49,29 @@ create_directory_if_not_exists "./broad_survey"
 #Create or navigate to the directory for the survey time
 create_directory_if_not_exists "./$survey_time"
 
-#Runs airodump using gpsd (-g) to a file called broad_$survey_time (-w) in the a,b,g and x bands (-b) and gives the manufacturer (-M), uptime (-U) and wps status (--wps). The dump files come in the form of pcap, csv, and gps
-sudo airodump-ng -g -w -p broad_"$survey_time" -b abgx -M -U --wps --output-format pcap,csv,gps "$interface"
+#Checks if user wants to use target list and then runs airodump using the target list
+read -rp "Would you like to use a target list? (y/N): " response
+response=$(echo "$response" | tr '[:upper:]' '[:lower:]')
+if [[ "$response" =~ ^(y|yes)$ ]]; then
+    cd ~/Aircrack_scripts/target_lists || exit 1
+    ls
+    read -rp 'Which target list would you like to use? (If none, input "new"): ' response
+    response=$(echo "$response" | tr '[:upper:]' '[:lower:]')
 
+    if [[ "$response" == "new" ]]; then
+        read -rp "Input file name: " file_name
+        if [[ -z "$file_name" || "$file_name" =~ [^a-zA-Z0-9._-] ]]; then
+            echo "Invalid file name."
+            exit 1
+        fi
+        read -rp "Input MAC Addresses: " mac_addresses
+        echo "$mac_addresses" > "$file_name"
+    else
+        file_name="$response"
+    fi
+
+    sudo airodump-ng -g -w "broad_$survey_time" -b abgx -z "$file_name" -M -U --wps --output-format pcap,csv,gps "$interface"
+
+else
+    sudo airodump-ng -g -w "broad_$survey_time" -b abgx -M -U --wps --output-format pcap,csv,gps "$interface"
+fi
