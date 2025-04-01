@@ -6,6 +6,9 @@ if [[ $EUID -ne 0 ]]; then
    exit 1
 fi
 
+#Define installation directory (not in /root)
+INSTALL_DIR="/opt"
+
 #Update and Upgrade System
 echo "Updating package lists..."
 apt update && apt upgrade -y
@@ -21,17 +24,18 @@ check_package_exists() {
     fi
 }
 
-#Function to build aircrack-ng and aircracked-ng
-build_aircrack_repo() {
+#Function to build repositories
+build_repo() {
     repo="$1"
+    repo_path="$INSTALL_DIR/$repo"
 
-    if [[ ! -d "$HOME/$repo" ]]; then
-        echo "Error: Directory '$HOME/$repo' does not exist."
+    if [[ ! -d "$repo_path" ]]; then
+        echo "Error: Directory '$repo_path' does not exist."
         exit 1
     fi
 
     echo "Building '$repo'..."
-    cd "$HOME/$repo" || { echo "Error: Failed to navigate to '$HOME/$repo'"; exit 1; }
+    cd "$repo_path" || { echo "Error: Failed to navigate to '$repo_path'"; exit 1; }
 
     autoreconf -i || { echo "Error: Failed autoreconf"; exit 1; }
     ./configure || { echo "Error: Failed configure"; exit 1; }
@@ -41,18 +45,19 @@ build_aircrack_repo() {
     echo "'$repo' built successfully."
 }
 
-
-#Function to check if the github repo is installed already or not
+#Function to check if a GitHub repo is already cloned
 git_repo_exists() {
-    repo_name=$(basename "$1" .git)  # Extract repo name
-    if [[ ! -d "$HOME/$repo_name" ]]; then
-        echo "Cloning repo from '$1'..."
-        git clone "$1" || { rm -rf "$HOME/$repo_name"; echo "Failed to clone '$repo_name', please check your network and URL"; exit 1; }
+    repo_url="$1"
+    repo_name=$(basename "$repo_url" .git)  # Extract repo name
+    repo_path="$INSTALL_DIR/$repo_name"
+
+    if [[ ! -d "$repo_path" ]]; then
+        echo "Cloning repo from '$repo_url' to '$repo_path'..."
+        git clone "$repo_url" "$repo_path" || { rm -rf "$repo_path"; echo "Failed to clone '$repo_name'. Check network and URL."; exit 1; }
     else
         echo "Repo '$repo_name' already exists, skipping clone."
     fi
 }
-
 
 #Install required packages
 echo "Installing dependencies..."
@@ -69,23 +74,17 @@ for pkg in "${packages[@]}"; do
     check_package_exists "$pkg"
 done
 
-#Clone aircrack-ng repo
-git_repo_exists https://github.com/aircrack-ng/aircrack-ng.git
+#Ensure the install directory exists
+mkdir -p "$INSTALL_DIR"
+chmod 755 "$INSTALL_DIR"
 
+#Clone and build aircrack-ng
+git_repo_exists "https://github.com/aircrack-ng/aircrack-ng.git"
+build_repo "aircrack-ng"
 
-#Build aircrack-ng
-build_aircrack_repo "aircrack-ng"
-
-#Navigate back to home directory
-cd || { echo "Error: Failed to navigate to ~"; exit 1; }
-
-#Clone aircracked-ng repo
-echo "Cloning aircracked-ng repository"
-git_repo_exists https://github.com/theweefies/aircracked-ng
-
-
-#Build aircracked-ng
-build_aircrack_repo "aircracked-ng"
+#Clone and build aircracked-ng
+git_repo_exists "https://github.com/theweefies/aircracked-ng"
+build_repo "aircracked-ng"
 
 #Updating library paths
 echo "Updating library paths..."
@@ -99,13 +98,12 @@ if ! grep -q '/usr/local/bin' /etc/profile.d/custom_path.sh 2>/dev/null; then
 fi
 source /etc/profile.d/custom_path.sh
 
-#Optionally reboot the system to update the PATH
-echo "Installation completed. A reboot is recommended to apply changes."
+#Optionally reboot the system to apply changes
+echo "Installation completed. A reboot is recommended."
 read -rp "Would you like to reboot now? (y/N): " response
-response=$(echo "$response" | tr '[:upper:]' '[:lower:]')  #Normalize input
+response=$(echo "$response" | tr '[:upper:]' '[:lower:]')  # Normalize input
 if [[ "$response" =~ ^(y|yes)$ ]]; then
     reboot
 else
     echo "Reboot manually when ready."
 fi
-

@@ -6,6 +6,8 @@ These are the scripts that I use when using aircrack to make the data storage an
 
 start.sh - Checks system and installs all dependencies for any scripts as well as aircrack-ng and aircracked-ng
     
+    aircrack-ng and aircracked-ng will be cloned to the /opt directory
+    
     It is important to note that gpsd needs to be configured before you can use it
         To do this edit the /etc/default/gpsd file
         It should look like this
