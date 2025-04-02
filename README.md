@@ -1,7 +1,7 @@
 # Aircrack_Scripts
 
     These are the scripts that I use when using aircrack to make the data storage and set up process easier
-====================================================================================================================
+========================================================================================
 
 # Installation Instructions
 
@@ -10,7 +10,7 @@
     sudo ./setup.sh
 
     After that you can run the broad survey and targeted survey with the provided scripts
-====================================================================================================================
+========================================================================================
 
 # setup.sh
     Checks system and installs all dependencies for any scripts as well as aircrack-ng and aircracked-ng
@@ -34,7 +34,7 @@
             #Automatically hot add/remove USB GPS devices via gpsdctl
             USBAUTO="true"
 
-====================================================================================================================
+========================================================================================
 
 # broad_survey.sh 
     Randomizes the MAC of the NIC
@@ -43,7 +43,7 @@
     Creates the file system Aircrack_Scripts/airodump_collect/date/braod_survey/time
     Runs airodump surveying the a, b, g, and x bands
 
---------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------
 
 # target_surveys.sh
     Randomizes the MAC of the NIC
@@ -54,4 +54,4 @@
     Accepts BSSID
     Runs airodump locked on one channel filtering for only the specified BSSID    
 
-====================================================================================================================
+========================================================================================
