@@ -1,6 +1,6 @@
 # Aircrack_Scripts
 
-T   hese are the scripts that I use when using aircrack to make the data storage and set up process easier
+    These are the scripts that I use when using aircrack to make the data storage and set up process easier
 ====================================================================================================================
 
 # Installation Instructions
