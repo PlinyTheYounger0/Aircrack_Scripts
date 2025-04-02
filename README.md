@@ -5,7 +5,7 @@ These are the scripts that I use when using aircrack to make the data storage an
 
 Installation Instructions
 
-git clone <url>
+git clone https://github.com/PlinyTheYounger0/Aircrack_Scripts
 cd Aircrack_Scripts
 sudo ./setup.sh
 
