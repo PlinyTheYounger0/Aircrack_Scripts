@@ -1,10 +1,18 @@
 # Aircrack_Scripts
 
 These are the scripts that I use when using aircrack to make the data storage and set up process easier
-
 ====================================================================================================================
 
-start.sh - Checks system and installs all dependencies for any scripts as well as aircrack-ng and aircracked-ng
+Installation Instructions
+
+git clone <url>
+cd Aircrack_Scripts
+sudo ./setup.sh
+
+After that you can run the broad survey and targeted survey with the provided scripts
+====================================================================================================================
+
+setup.sh - Checks system and installs all dependencies for any scripts as well as aircrack-ng and aircracked-ng
     
     aircrack-ng and aircracked-ng will be cloned to the /opt directory
     
@@ -25,14 +33,24 @@ START_DAEMON="true"
 # Automatically hot add/remove USB GPS devices via gpsdctl
 USBAUTO="true"
 
-================================================================================================================================
+====================================================================================================================
 
-Both of the following scripts build their own file system to help organize the file output of the functions
+broad_survey.sh 
+    Randomizes the MAC of the NIC
+    Accepts target list
+        If there is no target list / you want to create a new target list the script allows you to create one
+    Creates the file system Aircrack_Scripts/airodump_collect/date/braod_survey/time
+    Runs airodump surveying the a, b, g, and x bands
 
-broad_survey.sh - Randomizes the Network Interface Card's (NIC) MAC and starts survey all wifi channels (more functionality such as target lists and wifi 6 survey to be added)
+--------------------------------------------------------------------------------------------------------------------
 
--------------------------------------------------------------------------------------------------------------------------------------
+target_surveys.sh
+    Randomizes the MAC of the NIC
+    Accepts target list
+        If there is no target list / you want to create a new target list the script allows you to create one
+    Creates the file system Aircrack_Scripts/airodump_collect/date/target_survey/time
+    Accepts Channel
+    Accepts BSSID
+    Runs airodump locked on one channel filtering for only the specified BSSID    
 
-target_surveys.sh - Randomized the MAC of the NIC and starts a survey on a specific channel filtered for a specific bssid
-
-==================================================================================================================================
+====================================================================================================================
